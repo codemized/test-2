@@ -13,8 +13,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-red-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+    <div className="min-h-screen relative flex items-center justify-center p-4">
+      {/* Imagen de fondo con blur */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url("https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80")',
+          filter: 'blur(8px)',
+          transform: 'scale(1.1)'
+        }}
+      />
+      
+      {/* Overlay oscuro */}
+      <div className="absolute inset-0 bg-black/40" />
+      
+      <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-8 w-full max-w-md relative z-10">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Iniciar Sesión
         </h1>
