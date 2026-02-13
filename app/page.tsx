@@ -1,42 +1,56 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function BouncingBallPage() {
-  const [position, setPosition] = useState({ x: 50, y: 50 });
-  const [velocity, setVelocity] = useState({ x: 5, y: 5 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [velocity, setVelocity] = useState({ x: 1.5, y: 1.5 });
+  const velocityRef = useRef({ x: 1.5, y: 1.5 });
 
   useEffect(() => {
+    // Inicializar posición en el centro
+    const centerX = window.innerWidth / 2 - 25;
+    const centerY = window.innerHeight / 2 - 25;
+    setPosition({ x: centerX, y: centerY });
+
+    let animationFrame: number;
+
     const animate = () => {
-      setPosition(prev => ({
-        x: prev.x + velocity.x,
-        y: prev.y + velocity.y
-      }));
+      setPosition(prev => {
+        const newX = prev.x + velocityRef.current.x;
+        const newY = prev.y + velocityRef.current.y;
 
-      // Bounce off walls
-      if (position.x <= 0 || position.x >= window.innerWidth - 50) {
-        setVelocity(prev => ({ ...prev, x: -prev.x }));
-      }
+        // Bounce off walls (con un área de rebote en el centro)
+        if (newX <= 100 || newX >= window.innerWidth - 150) {
+          velocityRef.current.x = -velocityRef.current.x;
+        }
 
-      if (position.y <= 0 || position.y >= window.innerHeight - 50) {
-        setVelocity(prev => ({ ...prev, y: -prev.y }));
-      }
+        if (newY <= 100 || newY >= window.innerHeight - 150) {
+          velocityRef.current.y = -velocityRef.current.y;
+        }
 
-      requestAnimationFrame(animate);
+        return {
+          x: newX,
+          y: newY
+        };
+      });
+
+      animationFrame = requestAnimationFrame(animate);
     };
 
-    const animationFrame = requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrame);
-  }, [position, velocity]);
+  }, []);
 
   return (
-    <div className="relative w-screen h-screen bg-gray-100 overflow-hidden">
+    <div className="relative w-screen h-screen bg-gradient-to-br from-gray-50 to-gray-200 overflow-hidden">
       <div
-        className="absolute w-12 h-12 bg-blue-500 rounded-full transition-all duration-100 ease-linear"
+        className="absolute w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-lg"
         style={{
           left: `${position.x}px`,
-          top: `${position.y}px`
+          top: `${position.y}px`,
+          transition: 'all 0.05s linear'
         }}
       />
     </div>
