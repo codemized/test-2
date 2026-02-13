@@ -1,58 +1,69 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
-export default function BouncingBallPage() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [velocity, setVelocity] = useState({ x: 1.5, y: 1.5 });
-  const velocityRef = useRef({ x: 1.5, y: 1.5 });
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    // Inicializar posición en el centro
-    const centerX = window.innerWidth / 2 - 25;
-    const centerY = window.innerHeight / 2 - 25;
-    setPosition({ x: centerX, y: centerY });
-
-    let animationFrame: number;
-
-    const animate = () => {
-      setPosition(prev => {
-        const newX = prev.x + velocityRef.current.x;
-        const newY = prev.y + velocityRef.current.y;
-
-        // Bounce off walls (con un área de rebote en el centro)
-        if (newX <= 100 || newX >= window.innerWidth - 150) {
-          velocityRef.current.x = -velocityRef.current.x;
-        }
-
-        if (newY <= 100 || newY >= window.innerHeight - 150) {
-          velocityRef.current.y = -velocityRef.current.y;
-        }
-
-        return {
-          x: newX,
-          y: newY
-        };
-      });
-
-      animationFrame = requestAnimationFrame(animate);
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Login:', { email, password });
+    // Aquí iría la lógica de autenticación
+  };
 
   return (
-    <div className="relative w-screen h-screen bg-gradient-to-br from-gray-50 to-gray-200 overflow-hidden">
-      <div
-        className="absolute w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-lg"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transition: 'all 0.05s linear'
-        }}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Iniciar Sesión
+        </h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
+          >
+            Entrar
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <a href="#" className="text-sm text-blue-600 hover:text-blue-800">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
